@@ -3,6 +3,7 @@ import { createAppContainer, createStackNavigator } from 'react-navigation';
 
 import HomeScreen from '../screens/HomeScreen';
 import CameraScreen1 from '../screens/CameraScreen1';
+import Results from '../screens/Results';
 //import ResultsScreen from '../screens/ResultsScreen';
 //import MainTabNavigator from './MainTabNavigator';
 
@@ -15,6 +16,7 @@ import CameraScreen1 from '../screens/CameraScreen1';
 const MainNavigator = createStackNavigator({
 	Home: {screen: HomeScreen},
 	Camera1: {screen: CameraScreen1},
+	PieChart:{screen:Results},
 //	Results: {screen: ResultsScreen}
 });
 

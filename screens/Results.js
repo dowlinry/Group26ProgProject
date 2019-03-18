@@ -10,15 +10,22 @@ import {
   View,
   createStackNavigator
 } from 'react-native';
+import Pie from 'react-native-pie';
 
 import { MonoText } from '../assets/text/StyledText';
+/*
+   Code by: Catalina Rete
+   Navigate to this component like this: this.props.navigation.navigate('PieChart',{score: 35})
+*/
 
-export default class HomeScreen extends React.Component {
+export default class Results extends React.Component {
   static navigationOptions = {
     header: null,
   };
 
   render() {
+    const { navigation } = this.props;
+    const score = navigation.getParam('score', 'NO-ID');
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -32,21 +39,30 @@ export default class HomeScreen extends React.Component {
               style={styles.welcomeImage}
             />
           </View>
+          <View style={styles.pieChartContainer}>
+            <Pie
+              radius={70}
+              innerRadius={65}
+              series={[score]}
+              colors={['#f00']}
+              backgroundColor="#ddd"
+            />
+            <View style={styles.gauge}>
+              {/*Text in between Gauge Pie Chart*/}
+              <Text style={styles.gaugeText}>{score}%</Text>
+            </View>
+            <View style={styles.message}>
+            <Text style={{fontWeight: 'bold',fontSize:14}}> Congratulations! Your accuracy is {score}%! </Text>
+            </View>
+          </View>
+
           <View style={styles.getStartedContainer}>
-			<TextInput style = {styles.input}
-			   underlineColorAndroid = "transparent"
-               placeholder = "Name"
-               autoCapitalize = "none"/>
-			<TextInput style = {styles.input}
-			   underlineColorAndroid = "transparent"
-               placeholder = "Session ID"
-               autoCapitalize = "none"/>
             <TouchableOpacity
                style = {styles.submitButton}
                onPress = {
-                  () =>     this.props.navigation.navigate('Camera1')
+                  () =>     this.props.navigation.navigate('Home')
                }>
-               <Text style = {styles.submitButtonText}> Start </Text>
+               <Text style = {styles.submitButtonText}> Reset </Text>
             </TouchableOpacity>
           </View>
 
@@ -83,13 +99,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: 'center',
-  },
   contentContainer: {
     paddingTop: 0,
   },
@@ -107,8 +116,25 @@ const styles = StyleSheet.create({
   },
   getStartedContainer: {
     alignItems: 'center',
-    marginHorizontal: 50,
+    marginTop:20,
   },
-
-
+  pieChartContainer:{
+    marginTop: 30,
+    alignItems: 'center',
+  },
+  gauge: {
+   position: 'absolute',
+   width: 140,
+   height: 140,
+   alignItems: 'center',
+   justifyContent: 'center',
+ },
+ gaugeText: {
+   backgroundColor: 'transparent',
+   color: '#000',
+   fontSize: 24,
+ },
+ message:{
+   marginTop:15,
+ },
 });
