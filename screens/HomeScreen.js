@@ -12,12 +12,25 @@ import {
 } from 'react-native';
 
 import { MonoText } from '../assets/text/StyledText';
+import {db} from '../config.js';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
-
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+		session: '',
+		name: '',
+	};
+  };
+  submit = () => {
+	  finalName = this.state.name;
+	  finalSession = this.state.session;
+	  this.props.navigation.navigate('Camera1')
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -36,16 +49,18 @@ export default class HomeScreen extends React.Component {
 			<TextInput style = {styles.input}
 			   underlineColorAndroid = "transparent"
                placeholder = "Name"
-               autoCapitalize = "none"/>
+               autoCapitalize = "none"
+			   onChangeText = {(name) => this.setState({name})}
+			/>
 			<TextInput style = {styles.input}
 			   underlineColorAndroid = "transparent"
                placeholder = "Session ID"
-               autoCapitalize = "none"/>
+               autoCapitalize = "none"
+			   onChangeText = {(session) => this.setState({session})}
+			/>
             <TouchableOpacity
                style = {styles.submitButton}
-               onPress = {
-                  () =>     this.props.navigation.navigate('Camera1')
-               }>
+               onPress = {this.submit}>
                <Text style = {styles.submitButtonText}> Start </Text>
             </TouchableOpacity>
           </View>
@@ -55,7 +70,9 @@ export default class HomeScreen extends React.Component {
       </View>
     );
   };
+  
 };
+
 
 const styles = StyleSheet.create({
   input: {

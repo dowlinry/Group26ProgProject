@@ -8,7 +8,8 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  PermissionsAndroid
+  PermissionsAndroid,
+  StatusBar
 } from 'react-native';
 import AppNavigator from './navigation/AppNavigator';
 const instructions = Platform.select({
@@ -23,8 +24,13 @@ export default class App extends React.Component {
   static navigationOptions = {
     header: null,
   };
+  componentDidMount() {
+    StatusBar.setHidden(true);
+  }
 
   render() {
+    finalName: '';
+    finalSession: '';
     return (
         <AppNavigator />
     );

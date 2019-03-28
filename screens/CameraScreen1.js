@@ -1,61 +1,121 @@
 
-
 import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
+  Dimensions,
+  TouchableOpacity,
+  TouchableHighlight,
+  Image,
   View
 } from 'react-native';
 
 import Camera from 'react-native-camera'
+import {db} from '../config.js';
 
 export default class CameraScreen1 extends Component {
-  render() {
+  static navigationOptions = {
+    header: null,
+  };
+  
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      path: null,
+    };
+  }
+
+  takePicture() {
+    this.camera.capture()
+      .then((data) => {
+        console.log(data);
+        this.setState({ path: data.path })
+		db.ref('/sessions/' + finalSession + '/sessionID/' + finalName).update({
+			Score: 42
+		});
+      })
+      .catch(err => console.error(err));
+  }
+
+  renderCamera() {
     return (
-      <View style={styles.container}>
-        <Camera
-          ref={(cam) => {
-            this.camera = cam
-          }}
-          style={styles.view}
-          aspect={Camera.constants.Aspect.fill}>
-            <Text 
-            style={styles.capture} 
-            onPress={this.takePicture.bind(this)}>
-              Capture
-            </Text>
-        </Camera>
+      <Camera
+        ref={(cam) => {
+          this.camera = cam;
+        }}
+        style={styles.preview}
+        aspect={Camera.constants.Aspect.fill}
+        captureTarget={Camera.constants.CaptureTarget.disk}
+      >
+        <TouchableHighlight
+          style={styles.capture}
+          onPress={this.takePicture.bind(this)}
+          underlayColor="rgba(255, 255, 255, 0.5)"
+        >
+          <View />
+        </TouchableHighlight>
+      </Camera>
+    );
+  }
+
+  renderImage() {
+    return (
+      <View>
+        <Image
+          source={{ uri: this.state.path }}
+          style={styles.preview}
+        />
+        <Text
+          style={styles.cancel}
+          onPress={() => this.setState({ path: null })}
+        >Cancel
+        </Text>
       </View>
     );
   }
 
-  takePicture() {
-    const options = {}
-
-    this.camera.capture({metadata: options}).then((data) => {
-      console.log(data)
-    }).catch((error) => {
-      console.log(error)
-    })
+  render() {
+    return (
+      <View style={styles.container}>
+        {this.state.path ? this.renderImage() : this.renderCamera()}
+      </View>
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row'
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#000',
   },
-  view: {
+  cameraContainer: {
+	  
+  },
+  preview: {
     flex: 1,
     justifyContent: 'flex-end',
-    alignItems: 'center'
+    alignItems: 'center',
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width
   },
   capture: {
-    flex: 0,
-    backgroundColor: 'steelblue',
-    borderRadius: 10,
-    color: 'red',
-    padding: 15,
-    margin: 45
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    borderWidth: 5,
+    borderColor: '#FFF',
+    marginBottom: 15,
+  },
+  cancel: {
+    position: 'absolute',
+    right: 20,
+    top: 20,
+    backgroundColor: 'transparent',
+    color: '#FFF',
+    fontWeight: '600',
+    fontSize: 17,
   }
 });
