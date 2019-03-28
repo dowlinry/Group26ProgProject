@@ -34,6 +34,7 @@ export default class CameraScreen1 extends Component {
 		db.ref('/sessions/' + finalSession + '/sessionID/' + finalName).update({
 			Score: 42
 		});
+		this.props.navigation.navigate('PieChart',{score: 42})
       })
       .catch(err => console.error(err));
   }
@@ -50,7 +51,9 @@ export default class CameraScreen1 extends Component {
       >
         <TouchableHighlight
           style={styles.capture}
-          onPress={this.takePicture.bind(this)}
+          onPress = {
+			  () => setTimeout(this.takePicture.bind(this),1500)
+			}
           underlayColor="rgba(255, 255, 255, 0.5)"
         >
           <View />
