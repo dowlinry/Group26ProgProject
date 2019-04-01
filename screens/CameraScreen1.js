@@ -9,9 +9,10 @@ import {
   Image,
   View
 } from 'react-native';
-
 import Camera from 'react-native-camera'
 import {db} from '../config.js';
+const fetch = require('node-fetch');
+var FormData = require('form-data');
 
 export default class CameraScreen1 extends Component {
   static navigationOptions = {
@@ -23,18 +24,38 @@ export default class CameraScreen1 extends Component {
 
     this.state = {
       path: null,
+      score: null,
     };
+  }
+
+  async processImage(data){
+    const data = new FormData();
+    data.append("file", {
+      name: data.name,
+      type: data.type,
+      uri: data.path
+    })
+
+    fetch('http://1bb0202d.ngrok.io/image', {
+      method: 'POST',
+      // headers: {'Content-Type':'multipart/form-data'},
+      body: data
+    })
+    .then(res => res.json())
+    .then(json => this.setState({lol: json.percentage}));  
+          
   }
 
   takePicture() {
     this.camera.capture()
       .then((data) => {
         console.log(data);
-        this.setState({ path: data.path })
+        this.setState({ path: data.path, score: this.processImage(data) })
+        
 		db.ref('/sessions/' + finalSession + '/sessionID/' + finalName).update({
-			Score: 42
+			Score: this.state.score
 		});
-		this.props.navigation.navigate('PieChart',{score: 42})
+		this.props.navigation.navigate('PieChart',{score: this.state.score})
       })
       .catch(err => console.error(err));
   }
