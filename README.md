@@ -1,5 +1,6 @@
 # Group26ProgProject 
 Surewash Handwash App
+Can be found at: https://github.com/dowlinry/Group26ProgProject
 
 How to run the project:
 
